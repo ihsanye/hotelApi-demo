@@ -11,7 +11,7 @@ const register = async (req, res, next) => {
         const passwordHash = await bcrypt.hash(password, 12)
         if (!isEmail(email)) res.status(500).json({ message: 'Gecerli bir email giriniz' })
         const newUser = await User.create({ ...req.body, password: passwordHash })
-        const token = jwt.sign({ id: newUser._id, idAdmin: newUser.isAdmin }, 'SECRET_KEY', { expiresIn: '1h' })
+        const token = jwt.sign({ id: newUser._id, idAdmin: newUser.isAdmin }, process.env.SECRET_TOKEN, { expiresIn: '1h' })
         res.cookie('token', token, { httpOnly: true }).status(201).json({
             token,
             newUser
